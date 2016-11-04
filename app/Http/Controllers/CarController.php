@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Car;
 use App\Http\Requests\CarRequest;
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use PDOException;
 
 class CarController extends Controller
 {
@@ -16,7 +18,18 @@ class CarController extends Controller
      */
     public function index()
     {
-        return Car::all()->toJson();
+        try{
+            return Car::all()->toJson();
+        }
+        catch(QueryException $e){
+            return $e->getMessage();
+        }
+        catch(PDOException $e){
+            return $e->getMessage();
+        }
+        catch(Exception $e){
+            return $e->getMessage();
+        }
     }
 
     /**
@@ -40,7 +53,10 @@ class CarController extends Controller
         try{
             return Car::create($request->all());
         }
-        catch(\PDOException $e){
+        catch(QueryException $e){
+            return $e->getMessage();
+        }
+        catch(PDOException $e){
             return $e->getMessage();
         }
         catch(Exception $e){
@@ -59,7 +75,10 @@ class CarController extends Controller
         try{
             return Car::findOrFail($id);
         }
-        catch(\PDOException $e){
+        catch(QueryException $e){
+            return $e->getMessage();
+        }
+        catch(PDOException $e){
             return $e->getMessage();
         }
         catch(Exception $e){
@@ -91,7 +110,10 @@ class CarController extends Controller
             $car = Car::findOrFail($id);
             return $car->update($request->all());
         }
-        catch(\PDOException $e){
+        catch(QueryException $e){
+            return $e->getMessage();
+        }
+        catch(PDOException $e){
             return $e->getMessage();
         }
         catch(Exception $e){
@@ -110,7 +132,10 @@ class CarController extends Controller
         try{
             return Car::destroy($id);
         }
-        catch(\PDOException $e){
+        catch(QueryException $e){
+            return $e->getMessage();
+        }
+        catch(PDOException $e){
             return $e->getMessage();
         }
         catch(Exception $e){
