@@ -17,7 +17,11 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::resource('users', 'UserController');
 Route::resource('cars', 'CarController');
-Route::resource('roles', 'RolesController');
+Route::get('car_rentals/user/{id}', 'CarRentalController@showByUser');
+Route::resource('car_rentals', 'CarRentalController');
+Route::resource('roles', 'RoleController');
+Route::resource('offices', 'OfficeController');
 
 Route::get('/home', 'HomeController@index');

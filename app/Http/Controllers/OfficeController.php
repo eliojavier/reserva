@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Car;
-use App\Http\Requests\CarRequest;
+use App\Http\Requests\OfficeRequest;
+use App\Office;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use PDOException;
 
-class CarController extends Controller
+class OfficeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,7 +19,7 @@ class CarController extends Controller
     public function index()
     {
         try{
-            return Car::all()->toJson();
+            return Office::all()->toJson();
         }
         catch(QueryException $e){
             return $e->getMessage();
@@ -45,13 +45,13 @@ class CarController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param CarRequest|Request $request
+     * @param OfficeRequest|Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CarRequest $request)
+    public function store(OfficeRequest $request)
     {
         try{
-            return Car::create($request->all());
+            return Office::create($request->all());
         }
         catch(QueryException $e){
             return $e->getMessage();
@@ -73,7 +73,7 @@ class CarController extends Controller
     public function show($id)
     {
         try{
-            return Car::findOrFail($id);
+            return Office::findOrFail($id);
         }
         catch(QueryException $e){
             return $e->getMessage();
@@ -94,20 +94,20 @@ class CarController extends Controller
      */
     public function edit($id)
     {
-       //
+        //
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param CarRequest|Request $request
+     * @param OfficeRequest|Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CarRequest $request, $id)
+    public function update(OfficeRequest $request, $id)
     {
         try{
-            $car = Car::findOrFail($id);
+            $car = Office::findOrFail($id);
             return $car->update($request->all());
         }
         catch(QueryException $e){
@@ -130,7 +130,7 @@ class CarController extends Controller
     public function destroy($id)
     {
         try{
-            return Car::destroy($id);
+            return Office::destroy($id);
         }
         catch(QueryException $e){
             return $e->getMessage();

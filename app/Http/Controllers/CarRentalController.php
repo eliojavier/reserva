@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\RoleRequest;
-use App\Role;
+use App\User;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use PDOException;
 
-class RolesController extends Controller
+class CarRentalController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,18 +19,7 @@ class RolesController extends Controller
      */
     public function index()
     {
-        try{
-            return Role::all()->toJson();
-        }
-        catch(QueryException $e){
-            return $e->getMessage();
-        }
-        catch(PDOException $e){
-            return $e->getMessage();
-        }
-        catch(Exception $e){
-            return $e->getMessage();
-        }
+        //
     }
 
     /**
@@ -45,13 +35,14 @@ class RolesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param RoleRequest|Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(RoleRequest $request)
+    public function store(Request $request)
     {
         try{
-            return Role::create($request->all());
+            $user = User::findOrFail($request->user);
+            return $user->cars()->attach($request->car, ['pickup_time' => Carbon::now(), 'dropoff_time' => Carbon::now()]);
         }
         catch(QueryException $e){
             return $e->getMessage();
@@ -70,10 +61,19 @@ class RolesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function showByUser($id)
     {
         try{
-            return Role::findOrFail($id);
+//            return DB::table('car_rentals')
+//                    ->select(DB::raw('users.name'))
+//                    ->where('user_id', $id)
+//                    ->get()
+//                    ->toJson();
+            $user = User::findOrFail($id);
+            $cars = $user->cars();
+            foreach ($cars as $car){
+                return json_encode($car->make);
+            }
         }
         catch(QueryException $e){
             return $e->getMessage();
@@ -84,6 +84,17 @@ class RolesController extends Controller
         catch(Exception $e){
             return $e->getMessage();
         }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showByCar($id)
+    {
+        //
     }
 
     /**
@@ -106,19 +117,7 @@ class RolesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        try{
-            $car = Role::findOrFail($id);
-            return $car->update($request->all());
-        }
-        catch(QueryException $e){
-            return $e->getMessage();
-        }
-        catch(PDOException $e){
-            return $e->getMessage();
-        }
-        catch(Exception $e){
-            return $e->getMessage();
-        }
+        //
     }
 
     /**
@@ -129,17 +128,6 @@ class RolesController extends Controller
      */
     public function destroy($id)
     {
-        try{
-            return Role::destroy($id);
-        }
-        catch(QueryException $e){
-            return $e->getMessage();
-        }
-        catch(PDOException $e){
-            return $e->getMessage();
-        }
-        catch(Exception $e){
-            return $e->getMessage();
-        }
+        //
     }
 }
